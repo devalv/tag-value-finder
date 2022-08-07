@@ -13,3 +13,13 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Go workspace file
+go.work
+
+# JB Files
+.idea
+
+# Local configuration
+*.env
+*netrc
