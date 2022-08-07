@@ -1,2 +1,2 @@
 # tag-value-finder
-HTML tag value getter
+Get task from RabbitMQ -> search it on the page -> Put task result to the RabbitMQ
