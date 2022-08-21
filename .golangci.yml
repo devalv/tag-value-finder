@@ -62,7 +62,6 @@ linters:
     - misspell
     - nakedret
     - nestif
-    - nlreturn
     - noctx
     - nolintlint
     - prealloc
