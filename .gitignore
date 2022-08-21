@@ -23,3 +23,6 @@ go.work
 # Local configuration
 *.env
 *netrc
+
+# RMQ local data
+.rmq-data
