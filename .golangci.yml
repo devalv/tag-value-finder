@@ -64,9 +64,7 @@ linters:
     - noctx
     - nolintlint
     - prealloc
-    - sqlclosecheck
     - staticcheck
-    - structcheck
     - stylecheck
     - testpackage
     - typecheck
@@ -75,7 +73,6 @@ linters:
     - unused
     - varcheck
     - whitespace
-    - wsl
 
 run:
   timeout: 5m

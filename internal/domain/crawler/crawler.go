@@ -11,8 +11,7 @@ import (
 
 // extracts tag value from url
 func crawl(url, tag string) (tagValue string, err error) {
-	resp, err := http.Get(url)
-
+	resp, err := http.Get(url) //nolint:gosec,noctx
 	if err != nil {
 		return "", err
 	}
@@ -42,7 +41,6 @@ func crawl(url, tag string) (tagValue string, err error) {
 			if tt = z.Next(); tt == html.TextToken {
 				return z.Token().Data, nil
 			}
-
 		}
 	}
 }
@@ -53,6 +51,6 @@ func GetH1(url string) (h1Value string) {
 	if err != nil {
 		log.Error().Err(err).Msg("")
 	}
-	return v
 
+	return v
 }
