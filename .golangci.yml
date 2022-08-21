@@ -30,7 +30,6 @@ linters:
     - godox # disable errors on TODO's
     - funlen
     - rowserrcheck
-    - gci
     - godot
   enable:
     - asciicheck
