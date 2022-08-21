@@ -65,7 +65,6 @@ linters:
     - noctx
     - nolintlint
     - prealloc
-    - revive
     - sqlclosecheck
     - staticcheck
     - structcheck
