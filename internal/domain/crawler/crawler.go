@@ -11,8 +11,7 @@ import (
 
 // extracts tag value from url
 func crawl(url, tag string) (tagValue string, err error) {
-	//resp, err := http.Get(url) //nolint:gosec,noctx
-	resp, err := http.Get(url)
+	resp, err := http.Get(url) //nolint:gosec,noctx
 	if err != nil {
 		return "", err
 	}
