@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"errors"
+	"io"
 	"net/http"
 	localE "tag-value-finder/internal/domain/errors"
 
@@ -17,7 +18,12 @@ func crawl(url, tag string) (tagValue string, err error) {
 	}
 
 	b := resp.Body
-	defer b.Close() // close Body when the function completes
+	defer func(b io.ReadCloser) {
+		err := b.Close()
+		if err != nil {
+			log.Error().Err(err)
+		}
+	}(b) // close Body when the function completes
 
 	z := html.NewTokenizer(b)
 
