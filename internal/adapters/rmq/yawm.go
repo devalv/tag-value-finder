@@ -63,12 +63,11 @@ func (y *YawmRmq) LaunchConsumer() error {
 	var forever chan struct{}
 
 	go func() {
-		for d := range msgs {
-			log.Debug().Msgf("Received a message: %s", d.Body)
-			tagValue := crawler.GetH1(string(d.Body))
+		for m := range msgs {
+			log.Debug().Msgf("Received a message: %s", m.Body)
+			tagValue := crawler.GetH1(string(m.Body))
 			log.Debug().Msgf("Tag value is: %s", tagValue)
-			//TODO: post response to Producer
-
+			// TODO: post response to Producer
 		}
 	}()
 
