@@ -4,15 +4,17 @@ import (
 	"context"
 	"tag-value-finder/internal/domain/crawler"
 	"tag-value-finder/internal/domain/errors"
+	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/rs/zerolog/log"
 )
 
 type YawmRmq struct {
-	c           *amqp.Connection
-	ch          *amqp.Channel
-	inQueryName string
+	c            *amqp.Connection
+	ch           *amqp.Channel
+	inQueryName  string
+	outQueryName string
 }
 
 func failOnError(err error, msg string) {
@@ -21,7 +23,28 @@ func failOnError(err error, msg string) {
 	}
 }
 
-func NewYawm(ctx context.Context, rmqConnURI, inQueryName string) (*YawmRmq, error) {
+func logError(err error, msg string) {
+	if err != nil {
+		log.Error().Msgf("%s: %s", msg, err)
+	}
+}
+
+func declareQueue(ch *amqp.Channel, queryName string) (string, error) {
+	mq, err := ch.QueueDeclare(
+		queryName, // name
+		false,     // durable
+		false,     // delete when unused
+		false,     // exclusive
+		false,     // no-wait
+		nil,       // arguments
+	)
+	if err != nil {
+		return "", err
+	}
+	return mq.Name, nil
+}
+
+func NewYawm(ctx context.Context, rmqConnURI, inQueryName, outQueryName string) (*YawmRmq, error) {
 	log.Debug().Msgf("Trying to connect to %s", rmqConnURI)
 	conn, err := amqp.Dial(rmqConnURI)
 	failOnError(err, errors.RmqConnectError)
@@ -29,24 +52,36 @@ func NewYawm(ctx context.Context, rmqConnURI, inQueryName string) (*YawmRmq, err
 	ch, err := conn.Channel()
 	failOnError(err, errors.RmqChanOpenError)
 
-	mq, err := ch.QueueDeclare(
-		inQueryName, // name
-		false,       // durable
-		false,       // delete when unused
-		false,       // exclusive
-		false,       // no-wait
-		nil,         // arguments
-	)
-	failOnError(err, "Failed to declare a queue")
+	imqName, err := declareQueue(ch, inQueryName)
+	failOnError(err, errors.RmqInQueueError)
+
+	omqName, err := declareQueue(ch, outQueryName)
+	failOnError(err, errors.RmqOutQueueError)
 
 	log.Debug().Msgf("Connected to %s", rmqConnURI)
-	return &YawmRmq{c: conn, ch: ch, inQueryName: mq.Name}, nil
+	return &YawmRmq{c: conn, ch: ch, inQueryName: imqName, outQueryName: omqName}, nil
 }
 
 func (y *YawmRmq) Disconnect() error {
 	y.ch.Close()
 	y.c.Close()
 	return nil
+}
+
+func (y *YawmRmq) PublishResponse(msg string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	err := y.ch.PublishWithContext(ctx,
+		"",             // exchange
+		y.outQueryName, // routing key
+		false,          // mandatory
+		false,          // immediate
+		amqp.Publishing{
+			ContentType: "text/plain",
+			Body:        []byte(msg),
+		})
+	log.Debug().Msgf("Pushed a message: %s", msg)
+	return err
 }
 
 func (y *YawmRmq) LaunchConsumer() error {
@@ -66,12 +101,12 @@ func (y *YawmRmq) LaunchConsumer() error {
 		for m := range msgs {
 			log.Debug().Msgf("Received a message: %s", m.Body)
 			tagValue := crawler.GetH1(string(m.Body))
-			log.Debug().Msgf("Tag value is: %s", tagValue)
-			// TODO: post response to Producer
+			err := y.PublishResponse(tagValue)
+			logError(err, errors.RmqPublishError)
 		}
 	}()
 
-	log.Debug().Msgf(" [*] Waiting for messages. To exit press CTRL+C")
+	log.Debug().Msg(" [*] Waiting for messages.")
 	<-forever
 
 	return nil
