@@ -2,6 +2,7 @@ package rmq
 
 import (
 	"context"
+	"strings"
 	"tag-value-finder/internal/domain/crawler"
 	"tag-value-finder/internal/domain/errors"
 	"time"
@@ -20,12 +21,6 @@ type YawmRmq struct {
 func failOnError(err error, msg string) {
 	if err != nil {
 		log.Panic().Msgf("%s: %s", msg, err)
-	}
-}
-
-func logError(err error, msg string) {
-	if err != nil {
-		log.Error().Msgf("%s: %s", msg, err)
 	}
 }
 
@@ -85,7 +80,7 @@ func (y *YawmRmq) PublishResponse(msg string) error {
 }
 
 func (y *YawmRmq) LaunchConsumer() error {
-	msgs, _ := y.ch.Consume(
+	messages, _ := y.ch.Consume(
 		y.inQueryName,
 		"",    // consumer
 		true,  // auto-ack
@@ -98,11 +93,11 @@ func (y *YawmRmq) LaunchConsumer() error {
 	var forever chan struct{}
 
 	go func() {
-		for m := range msgs {
+		for m := range messages {
 			log.Debug().Msgf("Received a message: %s", m.Body)
 			tagValue := crawler.GetH1(string(m.Body))
-			err := y.PublishResponse(tagValue)
-			logError(err, errors.RmqPublishError)
+			err := y.PublishResponse(strings.TrimSpace(tagValue))
+			failOnError(err, errors.RmqPublishError)
 		}
 	}()
 
