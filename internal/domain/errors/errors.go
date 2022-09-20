@@ -1,10 +1,11 @@
 package errors
 
 const (
-	ErrorToken       = "error occurred during tokenization"
-	RmqConnectError  = "failed to connect to RabbitMQ"
-	RmqChanOpenError = "failed to open channel to RabbitMQ"
-	RmqInQueueError  = "failed to declare an incoming queue"
-	RmqOutQueueError = "failed to declare an outgoing queue"
-	RmqPublishError  = "failed to publish a message to RabbitMQ"
+	ErrorToken            = "error occurred during tokenization"
+	RMQConnectError       = "failed to connect to RabbitMQ"
+	RMQChanOpenError      = "failed to open channel to RabbitMQ"
+	RMQInQueueError       = "failed to declare an incoming queue"
+	RMQOutQueueError      = "failed to declare an outgoing queue"
+	RMQPublishError       = "failed to publish a message to RabbitMQ"
+	HTTPHealthListenError = "failed to listen health check port:`%e`"
 )

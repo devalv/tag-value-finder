@@ -20,7 +20,7 @@ type YawmRmq struct {
 
 func failOnError(err error, msg string) {
 	if err != nil {
-		log.Panic().Msgf("%s: %s", msg, err)
+		log.Fatal().Msgf(msg, err)
 	}
 }
 
@@ -42,24 +42,24 @@ func declareQueue(ch *amqp.Channel, queryName string) (string, error) {
 func NewYawm(ctx context.Context, rmqConnURI, inQueryName, outQueryName string) (*YawmRmq, error) {
 	log.Debug().Msgf("Trying to connect to %s", rmqConnURI)
 	conn, err := amqp.Dial(rmqConnURI)
-	failOnError(err, errors.RmqConnectError)
+	failOnError(err, errors.RMQConnectError)
 
 	ch, err := conn.Channel()
-	failOnError(err, errors.RmqChanOpenError)
+	failOnError(err, errors.RMQChanOpenError)
 
 	imqName, err := declareQueue(ch, inQueryName)
-	failOnError(err, errors.RmqInQueueError)
+	failOnError(err, errors.RMQInQueueError)
 
 	omqName, err := declareQueue(ch, outQueryName)
-	failOnError(err, errors.RmqOutQueueError)
+	failOnError(err, errors.RMQOutQueueError)
 
 	log.Debug().Msgf("Connected to %s", rmqConnURI)
 	return &YawmRmq{c: conn, ch: ch, inQueryName: imqName, outQueryName: omqName}, nil
 }
 
 func (y *YawmRmq) Disconnect() error {
-	y.ch.Close()
-	y.c.Close()
+	_ = y.ch.Close()
+	_ = y.c.Close()
 	return nil
 }
 
@@ -97,7 +97,7 @@ func (y *YawmRmq) LaunchConsumer() error {
 			log.Debug().Msgf("Received a message: %s", m.Body)
 			tagValue := crawler.GetH1(string(m.Body))
 			err := y.PublishResponse(strings.TrimSpace(tagValue))
-			failOnError(err, errors.RmqPublishError)
+			failOnError(err, errors.RMQPublishError)
 		}
 	}()
 
