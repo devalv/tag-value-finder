@@ -9,4 +9,7 @@ fmt:
 	gofmt -w -s ./internal && goimports -w ./internal
 
 test:
-	go test ./... -race -coverprofile=coverage.out -covermode=atomic
+	go test ./... -race
+
+cover:
+	go test ./... -race -cover
