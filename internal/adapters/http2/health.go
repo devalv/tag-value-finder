@@ -17,9 +17,10 @@ func HealthCheckHandler(ctx context.Context, addr string) error {
 			_, _ = w.Write([]byte("ok"))
 		})
 		srv := &http.Server{
-			ReadTimeout:  5 * time.Second,
-			WriteTimeout: 10 * time.Second,
-			Addr:         addr,
+			ReadHeaderTimeout: 5 * time.Second,
+			ReadTimeout:       5 * time.Second,
+			WriteTimeout:      5 * time.Second,
+			Addr:              addr,
 		}
 
 		err := srv.ListenAndServe()

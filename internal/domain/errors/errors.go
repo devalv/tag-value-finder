@@ -8,4 +8,5 @@ const (
 	RMQOutQueueError      = "failed to declare an outgoing queue"
 	RMQPublishError       = "failed to publish a message to RabbitMQ"
 	HTTPHealthListenError = "failed to listen health check port:`%e`"
+	ConfigError           = "failed to read config:`%e`"
 )
