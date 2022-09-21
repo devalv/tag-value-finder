@@ -4,3 +4,9 @@ setup: ## Install all the build and lint dependencies
 
 lint:
 	golangci-lint run -c .golangci.yml
+
+fmt:
+	gofmt -w -s ./internal && goimports -w ./internal
+
+test:
+	go test ./... -race -coverprofile=coverage.out -covermode=atomic
