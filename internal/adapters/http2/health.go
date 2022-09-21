@@ -3,8 +3,9 @@ package http2
 import (
 	"context"
 	"net/http"
-	"tag-value-finder/internal/domain/errors"
 	"time"
+
+	"github.com/devalv/tag-value-finder/internal/domain/errors"
 
 	"github.com/rs/zerolog/log"
 )

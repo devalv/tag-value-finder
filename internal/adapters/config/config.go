@@ -1,8 +1,8 @@
 package config
 
 import (
-	"tag-value-finder/internal/domain/errors"
-	"tag-value-finder/internal/domain/models"
+	"github.com/devalv/tag-value-finder/internal/domain/errors"
+	"github.com/devalv/tag-value-finder/internal/domain/models"
 
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/rs/zerolog/log"

@@ -1,4 +1,4 @@
-module tag-value-finder
+module github.com/devalv/tag-value-finder
 
 go 1.19
 

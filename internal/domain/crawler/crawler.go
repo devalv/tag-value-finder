@@ -4,7 +4,8 @@ import (
 	"errors"
 	"io"
 	"net/http"
-	localE "tag-value-finder/internal/domain/errors"
+
+	localE "github.com/devalv/tag-value-finder/internal/domain/errors"
 
 	"github.com/rs/zerolog/log"
 	"golang.org/x/net/html"

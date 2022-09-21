@@ -3,9 +3,10 @@ package rmq
 import (
 	"context"
 	"strings"
-	"tag-value-finder/internal/domain/crawler"
-	"tag-value-finder/internal/domain/errors"
 	"time"
+
+	"github.com/devalv/tag-value-finder/internal/domain/crawler"
+	"github.com/devalv/tag-value-finder/internal/domain/errors"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/rs/zerolog/log"

@@ -5,7 +5,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"tag-value-finder/internal/application"
+
+	"github.com/devalv/tag-value-finder/internal/application"
 )
 
 func main() {

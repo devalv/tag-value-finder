@@ -2,10 +2,11 @@ package application
 
 import (
 	"context"
-	"tag-value-finder/internal/adapters/config"
-	"tag-value-finder/internal/adapters/http2"
-	"tag-value-finder/internal/adapters/rmq"
-	"tag-value-finder/internal/ports"
+
+	"github.com/devalv/tag-value-finder/internal/adapters/config"
+	"github.com/devalv/tag-value-finder/internal/adapters/http2"
+	"github.com/devalv/tag-value-finder/internal/adapters/rmq"
+	"github.com/devalv/tag-value-finder/internal/ports"
 
 	"github.com/rs/zerolog/log"
 )
