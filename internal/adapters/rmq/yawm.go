@@ -2,7 +2,6 @@ package rmq
 
 import (
 	"context"
-	"strings"
 	"time"
 
 	"github.com/devalv/tag-value-finder/internal/domain/crawler"
@@ -96,8 +95,7 @@ func (y *YawmRmq) LaunchConsumer() error {
 	go func() {
 		for m := range messages {
 			log.Debug().Msgf("Received a message: %s", m.Body)
-			tagValue := crawler.GetH1(string(m.Body))
-			err := y.PublishResponse(strings.TrimSpace(tagValue))
+			err := y.PublishResponse(crawler.GetH1(string(m.Body)))
 			failOnError(err, errors.RMQPublishError)
 		}
 	}()

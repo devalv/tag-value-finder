@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"strings"
 
 	localE "github.com/devalv/tag-value-finder/internal/domain/errors"
 
@@ -46,7 +47,8 @@ func crawl(url, tag string) (tagValue string, err error) {
 
 			// Extract the <tag> value, if there is one
 			if tt = z.Next(); tt == html.TextToken {
-				return z.Token().Data, nil
+				value := z.Token().Data
+				return strings.TrimSpace(value), nil
 			}
 		}
 	}

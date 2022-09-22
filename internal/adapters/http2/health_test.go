@@ -11,7 +11,7 @@ import (
 )
 
 func TestHealth(t *testing.T) {
-	_ = HealthCheckHandler(context.TODO(), ":3000")
+	_ = HealthCheckHandler(context.TODO(), ":4000")
 	//Time to run-up http server
 	time.Sleep(1 * time.Second)
 
