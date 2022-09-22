@@ -13,11 +13,11 @@ import (
 const mockedH1Value = "BIBA"
 const mockedH2Value = "Boba"
 
-func mockH1Endpoint(w http.ResponseWriter, r *http.Request) {
+func mockH1Endpoint(w http.ResponseWriter, _ *http.Request) {
 	w.Write([]byte("<h1>" + mockedH1Value + "</h1>"))
 }
 
-func mockH2Endpoint(w http.ResponseWriter, r *http.Request) {
+func mockH2Endpoint(w http.ResponseWriter, _ *http.Request) {
 	w.Write([]byte("<h1><H2>\t" + mockedH2Value + "   </H2></h1>"))
 }
 
@@ -72,4 +72,35 @@ func TestCrawl(t *testing.T) {
 		})
 	}
 
+}
+
+func TestGetH1(t *testing.T) {
+	testSrv := mockedHttpServer()
+
+	cases := []struct {
+		url      string
+		tag      string
+		tagValue string
+	}{
+		{
+			url:      testSrv.URL + "/h1",
+			tag:      "h1",
+			tagValue: mockedH1Value,
+		},
+		{
+			url:      testSrv.URL,
+			tag:      "h1",
+			tagValue: "",
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(fmt.Sprintf("%s:%s", c.url, c.tag), func(t *testing.T) {
+			tagValue := GetH1(c.url)
+			if tagValue != c.tagValue {
+				t.Fatalf("Expected %s but was `%s`", c.tagValue, tagValue)
+			}
+
+		})
+	}
 }
