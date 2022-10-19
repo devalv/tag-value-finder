@@ -17,8 +17,11 @@
 # Go workspace file
 go.work
 
-# JB Files
+# editor Files
 .idea
+.vscode
+*.vsix
+.history
 
 # Local configuration
 *.env
